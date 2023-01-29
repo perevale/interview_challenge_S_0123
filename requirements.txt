@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+matplotlib
+matplotlib-inline
+nltk
+ipykernel
+stop-words
+tensorflow-text==2.8.*
+simplemma
