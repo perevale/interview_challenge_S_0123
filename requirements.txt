@@ -5,6 +5,10 @@ matplotlib
 matplotlib-inline
 nltk
 ipykernel
-stop-words
-tensorflow-text==2.8.*
-simplemma
+# stop-words
+# tensorflow-text==2.8.*
+# simplemma
+
+transformers
+pytorch
+evaluate 

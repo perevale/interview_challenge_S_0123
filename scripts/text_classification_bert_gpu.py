@@ -74,7 +74,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained("distilbert-base-multilingual-cased")
     model = AutoModelForSequenceClassification.from_pretrained(
        "distilbert-base-multilingual-cased", num_labels=no_classes
-        )       
+        ).to("cuda")
     
     f1_metric = evaluate.load("f1")
     def compute_metrics(eval_pred):
@@ -83,7 +83,8 @@ def main():
         return f1_metric.compute(predictions=predictions, references=labels, average='weighted')
     
     training_args = TrainingArguments(
-        output_dir="bert_classification",
+        output_dir="bert_classification_2",
+        fp16=True,
         learning_rate=2e-5,
         per_device_train_batch_size=16,
         per_device_eval_batch_size=16,
@@ -95,7 +96,7 @@ def main():
         push_to_hub=False,
     )
 
-    df_train, df_val, df_test = split_stratified_into_train_val_test(df, stratify_colname='category_enc')
+    df_train, df_val, df_test = split_stratified_into_train_val_test(df, stratify_colname='category_enc', random_state=42)
     train, val, test = Perex_Dataset(df_train, tokenizer), Perex_Dataset(df_val, tokenizer), Perex_Dataset(df_test, tokenizer)
 
 
@@ -111,6 +112,8 @@ def main():
     print("Evaluation on valid data:")
     print(trainer.evaluate())
     print("Evaluation on test data:")
-    print(trainer.predict()[2])
+    print(trainer.predict(test)[2])
 
 
+if __name__=="__main__":
+    main()
